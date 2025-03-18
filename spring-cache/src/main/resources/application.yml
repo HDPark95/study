@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: spring-quartz
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cache?characterEncoding=UTF-8&serverTimezone=UTC
+    username: application
+    password: application
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  batch:
+    jdbc:
+      initialize-schema: always
+      platform: mysql

@@ -1,0 +1,4 @@
+### Launch Dummy Data Batch Job
+POST http://localhost:8080/dummy-data HTTP/1.1
+Content-Type: application/json
+Accept: application/json
