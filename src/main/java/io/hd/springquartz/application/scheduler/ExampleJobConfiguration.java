@@ -1,11 +1,13 @@
 package io.hd.springquartz.application.scheduler;
 
+import lombok.RequiredArgsConstructor;
 import org.quartz.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ExampleScheduler {
+@RequiredArgsConstructor
+public class ExampleJobConfiguration {
 
     @Bean
     public JobDetail jobDetail() {

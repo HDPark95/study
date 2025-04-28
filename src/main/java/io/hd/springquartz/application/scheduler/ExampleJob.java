@@ -6,16 +6,16 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
-public class ExampleJob implements Job {
+public class ExampleJob extends QuartzJobBean {
 
     @Autowired
     ExampleService exampleService;
 
     @Override
-    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-
+    protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+        exampleService.exampleMethod();
     }
-
 }

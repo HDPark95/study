@@ -14,7 +14,7 @@ spring:
       hibernate:
       dialect: org.hibernate.dialect.MySQLDialect
   quartz:
-    job-store-type: jdbc
+    job-store-type: jdbc  
     jdbc:
       initialize-schema: always
     properties:
