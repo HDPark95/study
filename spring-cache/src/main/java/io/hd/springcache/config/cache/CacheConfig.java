@@ -1,8 +1,6 @@
-package io.hd.springcache.config;
+package io.hd.springcache.config.cache;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-import io.hd.springcache.config.cache.CacheType;
-import org.aspectj.weaver.tools.cache.SimpleCache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCache;
