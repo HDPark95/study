@@ -13,7 +13,13 @@ export let options = {
 export default function () {
     const res = http.get('http://localhost:8080/api/v1/users');
     check(res, {
-        'status is 200': (r) => r.status === 200,
+        'status is 200': (r) => {
+            const ok = r.status === 200;
+            if (!ok) {
+                console.log(`❌ 실패 응답: ${r.status} ${r.status_text}, headers: ${JSON.stringify(r.headers)}`);
+            }
+            return ok;
+        },
     });
     sleep(0.1);
 }
