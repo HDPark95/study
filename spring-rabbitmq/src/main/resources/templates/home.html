@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Notifications</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<h1>Rabbit MQ</h1>
+<div id="notifications"></div>
+</body>
+<script>
+    const socket = new SockJS("/ws");
+    stompClient.connect({}, function () {
+        console.log('Connected to WebSocket');
+        // 서버로 부터 메시지 구독
+        stompClient.subscribe('' +
+            '', function (message) {
+            const notificationsDiv = document.getElementById('notifications');
+            const newNotification = document.createElement('div');
+            newNotification.textContent = message.body;
+            notificationsDiv.appendChild(newNotification);
+        });
+        // 서버로 전송도 가능
+        const form = document.getElementById('notificationForm')
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const messageInput = document.getElementById('notificationMessage');
+            const message = messageInput.value;
+
+            stompClient.send('/app/send', {}, JSON.stringify({ message: message }));
+            messageInput.value = '';
+        })
+    });
+</script>
+</html>
