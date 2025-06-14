@@ -1,5 +1,6 @@
-package project.springrabbitmq.step0;
+package project.springrabbitmq.step1;
 
+import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -9,12 +10,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitMQConfig {
-    public static final String QUEUE_NAME = "spring_rabbitmq_queue";
+public class RabbitMQConfigV2 {
+    public static final String QUEUE_NAME = "spring_rabbitmq_work_queue";
 
     @Bean
     public Queue queue() {
-        return new Queue(QUEUE_NAME, false); //Volatile과 Durable
+        return new Queue(QUEUE_NAME, true); //Volatile과 Durable
     }
 
     @Bean
@@ -29,11 +30,12 @@ public class RabbitMQConfig {
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(QUEUE_NAME);
         container.setMessageListener(listenerAdapter);
+        container.setAcknowledgeMode(AcknowledgeMode.AUTO);
         return container;
     }
 
     @Bean
-    public MessageListenerAdapter listenerAdapter(Receiver receiver) {
-        return new MessageListenerAdapter(receiver, "receiveMessage");
+    public MessageListenerAdapter listenerAdapter(WorkQueueConsumer workQueueTask) {
+        return new MessageListenerAdapter(workQueueTask, "workQueueTask");
     }
 }
