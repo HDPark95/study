@@ -1,0 +1,13 @@
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: test1234!
+  application:
+    name: spring-rabbitmq
+  server:
+    port: 8080
+
+
+
