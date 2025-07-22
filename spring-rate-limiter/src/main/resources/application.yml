@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: spring-rate-limiter
+  datasource:
+    url: jdbc:mysql://localhost:3306/cache
+    username: application
+    password: application
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  main:
+    allow-circular-references: true  # 순환 참조 허용 (임시 해결책)
+
+# Actuator 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # 모든 엔드포인트 노출 (프로덕션 환경에서는 필요한 엔드포인트만 노출하는 것이 좋음)
+  endpoint:
+    health:
+      show-details: always  # 상세한 헬스 정보 표시
+    prometheus:
+      enabled: true  # Prometheus 엔드포인트 활성화
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true  # HTTP 요청에 대한 히스토그램 활성화
+    tags:
+      application: ${spring.application.name}  # 모든 메트릭에 애플리케이션 이름 태그 추가

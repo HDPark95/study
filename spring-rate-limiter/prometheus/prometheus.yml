@@ -1,0 +1,18 @@
+global:
+  scrape_interval: 15s     # 기본 스크랩 간격 (15초마다 메트릭 수집)
+  evaluation_interval: 15s # 기본 평가 간격 (15초마다 규칙 평가)
+
+# 스크랩 설정
+scrape_configs:
+  # Spring Boot 애플리케이션 메트릭 수집 설정
+  - job_name: 'spring-rate-limiter'
+    metrics_path: '/actuator/prometheus'  # Spring Boot Actuator의 Prometheus 엔드포인트
+    scrape_interval: 5s  # 이 작업에 대한 스크랩 간격 (5초)
+    static_configs:
+      - targets: ['host.docker.internal:8080']  # Docker 내부에서 호스트 머신의 Spring Boot 애플리케이션에 접근
+
+  # Prometheus 자체 메트릭 수집 설정
+  - job_name: 'prometheus'
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['localhost:9090']

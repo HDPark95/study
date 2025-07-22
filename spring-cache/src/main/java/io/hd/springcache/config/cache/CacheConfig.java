@@ -1,37 +1,35 @@
 package io.hd.springcache.config.cache;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.caffeine.CaffeineCache;
-import org.springframework.cache.support.SimpleCacheManager;
+import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import javax.cache.Caching;
+import javax.cache.spi.CachingProvider;
+import java.net.URI;
 
 @EnableCaching
 @Configuration
 public class CacheConfig {
 
     @Bean
-    CacheManager cacheManager(){
-        SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
+    public CacheManager cacheManager() {
+        try {
+            CachingProvider cachingProvider = Caching.getCachingProvider();
 
-        List<CaffeineCache> caffeineCaches =  Arrays.stream(CacheType.values())
-                .map(cacheType -> new CaffeineCache(
-                        cacheType.getCacheName(),
-                        Caffeine.newBuilder()
-                                .recordStats()
-                                .expireAfterWrite(cacheType.getExpiredAfterWrite(), TimeUnit.SECONDS)
-                                .maximumSize(cacheType.getMaximumSize())
-                                .build(
-                        )
-                )).toList();
+            ClassPathResource configResource = new ClassPathResource("ehcache.xml");
+            URI uri = configResource.getURI();
+            
+            javax.cache.CacheManager jCacheManager = cachingProvider.getCacheManager(
+                    uri, 
+                    getClass().getClassLoader());
 
-        simpleCacheManager.setCaches(caffeineCaches);
-        return simpleCacheManager;
+            return new JCacheCacheManager(jCacheManager);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to initialize EhCache manager", e);
+        }
     }
 }
