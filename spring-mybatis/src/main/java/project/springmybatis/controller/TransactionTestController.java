@@ -123,4 +123,84 @@ public class TransactionTestController {
             return ResponseEntity.ok("캐시 동작 확인 WITHOUT @Transactional 중 예외: " + e.getMessage());
         }
     }
+    
+    @GetMapping("/performance-with-transaction")
+    public ResponseEntity<String> performanceTestWithTransaction() {
+        try {
+            transactionTestService.performanceTestWithTransaction();
+            return ResponseEntity.ok("성능 테스트 WITH @Transactional 완료");
+        } catch (Exception e) {
+            return ResponseEntity.ok("성능 테스트 WITH @Transactional 중 예외: " + e.getMessage());
+        }
+    }
+    
+    @GetMapping("/performance-without-transaction")
+    public ResponseEntity<String> performanceTestWithoutTransaction() {
+        try {
+            transactionTestService.performanceTestWithoutTransaction();
+            return ResponseEntity.ok("성능 테스트 WITHOUT @Transactional 완료");
+        } catch (Exception e) {
+            return ResponseEntity.ok("성능 테스트 WITHOUT @Transactional 중 예외: " + e.getMessage());
+        }
+    }
+    
+    @GetMapping("/complex-performance-with-transaction")
+    public ResponseEntity<String> complexPerformanceTestWithTransaction() {
+        try {
+            transactionTestService.complexPerformanceTestWithTransaction();
+            return ResponseEntity.ok("복합 성능 테스트 WITH @Transactional 완료");
+        } catch (Exception e) {
+            return ResponseEntity.ok("복합 성능 테스트 WITH @Transactional 중 예외: " + e.getMessage());
+        }
+    }
+    
+    @GetMapping("/complex-performance-without-transaction")
+    public ResponseEntity<String> complexPerformanceTestWithoutTransaction() {
+        try {
+            transactionTestService.complexPerformanceTestWithoutTransaction();
+            return ResponseEntity.ok("복합 성능 테스트 WITHOUT @Transactional 완료");
+        } catch (Exception e) {
+            return ResponseEntity.ok("복합 성능 테스트 WITHOUT @Transactional 중 예외: " + e.getMessage());
+        }
+    }
+    
+    @GetMapping("/sqlsession-count-with-transaction")
+    public ResponseEntity<String> sqlSessionCountTestWithTransaction() {
+        try {
+            transactionTestService.sqlSessionCountTestWithTransaction();
+            return ResponseEntity.ok("SqlSession 생성 횟수 테스트 WITH @Transactional 완료");
+        } catch (Exception e) {
+            return ResponseEntity.ok("SqlSession 생성 횟수 테스트 WITH @Transactional 중 예외: " + e.getMessage());
+        }
+    }
+    
+    @GetMapping("/sqlsession-count-without-transaction")
+    public ResponseEntity<String> sqlSessionCountTestWithoutTransaction() {
+        try {
+            transactionTestService.sqlSessionCountTestWithoutTransaction();
+            return ResponseEntity.ok("SqlSession 생성 횟수 테스트 WITHOUT @Transactional 완료");
+        } catch (Exception e) {
+            return ResponseEntity.ok("SqlSession 생성 횟수 테스트 WITHOUT @Transactional 중 예외: " + e.getMessage());
+        }
+    }
+    
+    @GetMapping("/bulk-data-with-transaction")
+    public ResponseEntity<String> bulkDataTestWithTransaction() {
+        try {
+            transactionTestService.bulkDataTestWithTransaction();
+            return ResponseEntity.ok("대량 데이터 처리 테스트 WITH @Transactional 완료");
+        } catch (Exception e) {
+            return ResponseEntity.ok("대량 데이터 처리 테스트 WITH @Transactional 중 예외: " + e.getMessage());
+        }
+    }
+    
+    @GetMapping("/bulk-data-without-transaction")
+    public ResponseEntity<String> bulkDataTestWithoutTransaction() {
+        try {
+            transactionTestService.bulkDataTestWithoutTransaction();
+            return ResponseEntity.ok("대량 데이터 처리 테스트 WITHOUT @Transactional 완료");
+        } catch (Exception e) {
+            return ResponseEntity.ok("대량 데이터 처리 테스트 WITHOUT @Transactional 중 예외: " + e.getMessage());
+        }
+    }
 }

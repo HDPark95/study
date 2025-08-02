@@ -65,3 +65,51 @@ GET http://localhost:8080/api/transaction-test/exception-without-transaction
 Accept: application/json
 
 ###
+
+### 12. 성능 테스트 - @Transactional 있음 (100회 반복 조회)
+GET http://localhost:8080/api/transaction-test/performance-with-transaction
+Accept: application/json
+
+###
+
+### 13. 성능 테스트 - @Transactional 없음 (100회 반복 조회)
+GET http://localhost:8080/api/transaction-test/performance-without-transaction
+Accept: application/json
+
+###
+
+### 14. 복합 성능 테스트 - @Transactional 있음
+GET http://localhost:8080/api/transaction-test/complex-performance-with-transaction
+Accept: application/json
+
+###
+
+### 15. 복합 성능 테스트 - @Transactional 없음
+GET http://localhost:8080/api/transaction-test/complex-performance-without-transaction
+Accept: application/json
+
+###
+
+### 16. SqlSession 생성 횟수 테스트 - @Transactional 있음
+GET http://localhost:8080/api/transaction-test/sqlsession-count-with-transaction
+Accept: application/json
+
+###
+
+### 17. SqlSession 생성 횟수 테스트 - @Transactional 없음
+GET http://localhost:8080/api/transaction-test/sqlsession-count-without-transaction
+Accept: application/json
+
+###
+
+### 18. 대량 데이터 처리 테스트 - @Transactional 있음
+GET http://localhost:8080/api/transaction-test/bulk-data-with-transaction
+Accept: application/json
+
+###
+
+### 19. 대량 데이터 처리 테스트 - @Transactional 없음
+GET http://localhost:8080/api/transaction-test/bulk-data-without-transaction
+Accept: application/json
+
+###

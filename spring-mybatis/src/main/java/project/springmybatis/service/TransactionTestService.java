@@ -11,6 +11,7 @@ import project.springmybatis.domain.User;
 import project.springmybatis.mapper.UserMapper;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -302,5 +303,161 @@ public class TransactionTestService {
         log.info("결과: " + user3);
         
         log.info("=== 캐시 동작 확인 WITHOUT @Transactional 종료 ===");
+    }
+    
+    // 성능 비교 테스트 - @Transactional 있음
+    @Transactional
+    public void performanceTestWithTransaction() {
+        log.info("=== 성능 테스트 WITH @Transactional 시작 ===");
+        
+        long startTime = System.nanoTime();
+        int iterations = 100;
+        
+        for (int i = 0; i < iterations; i++) {
+            // 같은 데이터를 반복 조회 (1차 캐시 효과 확인)
+            User user = userMapper.selectUserById(1L);
+        }
+        
+        long endTime = System.nanoTime();
+        long duration = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
+        
+        log.info("트랜잭션 있음 - {}회 조회 소요시간: {}ms", iterations, duration);
+        log.info("트랜잭션 있음 - 평균 조회시간: {}ms", duration / (double) iterations);
+        log.info("=== 성능 테스트 WITH @Transactional 종료 ===");
+    }
+    
+    // 성능 비교 테스트 - @Transactional 없음
+    public void performanceTestWithoutTransaction() {
+        log.info("=== 성능 테스트 WITHOUT @Transactional 시작 ===");
+        
+        long startTime = System.nanoTime();
+        int iterations = 100;
+        
+        for (int i = 0; i < iterations; i++) {
+            // 같은 데이터를 반복 조회 (매번 새로운 SqlSession)
+            User user = userMapper.selectUserById(1L);
+        }
+        
+        long endTime = System.nanoTime();
+        long duration = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
+        
+        log.info("트랜잭션 없음 - {}회 조회 소요시간: {}ms", iterations, duration);
+        log.info("트랜잭션 없음 - 평균 조회시간: {}ms", duration / (double) iterations);
+        log.info("=== 성능 테스트 WITHOUT @Transactional 종료 ===");
+    }
+    
+    // 복합 성능 테스트 - @Transactional 있음
+    @Transactional
+    public void complexPerformanceTestWithTransaction() {
+        log.info("=== 복합 성능 테스트 WITH @Transactional 시작 ===");
+        
+        long startTime = System.nanoTime();
+        
+        // 다양한 조회 작업
+        User user1 = userMapper.selectUserById(1L);  // 첫 번째 조회
+        User user2 = userMapper.selectUserById(1L);  // 캐시에서 조회
+        User user3 = userMapper.selectUserById(2L);  // 다른 데이터 조회
+        User user4 = userMapper.selectUserById(1L);  // 다시 캐시에서 조회
+        
+        List<User> users = userMapper.selectAllUsers();  // 전체 조회
+        
+        long endTime = System.nanoTime();
+        long duration = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
+        
+        log.info("복합 작업 (트랜잭션 있음) 소요시간: {}ms", duration);
+        log.info("=== 복합 성능 테스트 WITH @Transactional 종료 ===");
+    }
+    
+    // 복합 성능 테스트 - @Transactional 없음
+    public void complexPerformanceTestWithoutTransaction() {
+        log.info("=== 복합 성능 테스트 WITHOUT @Transactional 시작 ===");
+        
+        long startTime = System.nanoTime();
+        
+        // 다양한 조회 작업 (매번 새로운 SqlSession)
+        User user1 = userMapper.selectUserById(1L);  // 첫 번째 조회
+        User user2 = userMapper.selectUserById(1L);  // 새로운 SqlSession으로 조회
+        User user3 = userMapper.selectUserById(2L);  // 다른 데이터 조회
+        User user4 = userMapper.selectUserById(1L);  // 또 새로운 SqlSession으로 조회
+        
+        List<User> users = userMapper.selectAllUsers();  // 전체 조회
+        
+        long endTime = System.nanoTime();
+        long duration = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
+        
+        log.info("복합 작업 (트랜잭션 없음) 소요시간: {}ms", duration);
+        log.info("=== 복합 성능 테스트 WITHOUT @Transactional 종료 ===");
+    }
+    
+    // SqlSession 생성 횟수 비교 테스트
+    @Transactional
+    public void sqlSessionCountTestWithTransaction() {
+        log.info("=== SqlSession 생성 횟수 테스트 WITH @Transactional 시작 ===");
+        log.info("트랜잭션 활성화 상태: {}", TransactionSynchronizationManager.isActualTransactionActive());
+        
+        // 여러 번 조회하지만 같은 SqlSession 사용
+        for (int i = 1; i <= 5; i++) {
+            User user = userMapper.selectUserById((long) i);
+            log.info("{}번째 조회 완료: {}", i, user.getName());
+        }
+        
+        log.info("=== SqlSession 생성 횟수 테스트 WITH @Transactional 종료 ===");
+    }
+    
+    // SqlSession 생성 횟수 비교 테스트
+    public void sqlSessionCountTestWithoutTransaction() {
+        log.info("=== SqlSession 생성 횟수 테스트 WITHOUT @Transactional 시작 ===");
+        log.info("트랜잭션 활성화 상태: {}", TransactionSynchronizationManager.isActualTransactionActive());
+        
+        // 매번 새로운 SqlSession 생성
+        for (int i = 1; i <= 5; i++) {
+            User user = userMapper.selectUserById((long) i);
+            log.info("{}번째 조회 완료: {}", i, user.getName());
+        }
+        
+        log.info("=== SqlSession 생성 횟수 테스트 WITHOUT @Transactional 종료 ===");
+    }
+    
+    // 대량 데이터 처리 성능 비교 - @Transactional 있음
+    @Transactional
+    public void bulkDataTestWithTransaction() {
+        log.info("=== 대량 데이터 처리 테스트 WITH @Transactional 시작 ===");
+        
+        long startTime = System.nanoTime();
+        
+        // 같은 사용자 정보를 50번 조회 (1차 캐시 효과 극대화)
+        for (int i = 0; i < 50; i++) {
+            User user = userMapper.selectUserById(1L);
+        }
+        
+        // 전체 사용자 목록 조회
+        List<User> users = userMapper.selectAllUsers();
+        
+        long endTime = System.nanoTime();
+        long duration = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
+        
+        log.info("대량 처리 (트랜잭션 있음) 소요시간: {}ms", duration);
+        log.info("=== 대량 데이터 처리 테스트 WITH @Transactional 종료 ===");
+    }
+    
+    // 대량 데이터 처리 성능 비교 - @Transactional 없음
+    public void bulkDataTestWithoutTransaction() {
+        log.info("=== 대량 데이터 처리 테스트 WITHOUT @Transactional 시작 ===");
+        
+        long startTime = System.nanoTime();
+        
+        // 같은 사용자 정보를 50번 조회 (매번 새로운 SqlSession)
+        for (int i = 0; i < 50; i++) {
+            User user = userMapper.selectUserById(1L);
+        }
+        
+        // 전체 사용자 목록 조회
+        List<User> users = userMapper.selectAllUsers();
+        
+        long endTime = System.nanoTime();
+        long duration = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
+        
+        log.info("대량 처리 (트랜잭션 없음) 소요시간: {}ms", duration);
+        log.info("=== 대량 데이터 처리 테스트 WITHOUT @Transactional 종료 ===");
     }
 }
