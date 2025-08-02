@@ -1,0 +1,67 @@
+### MyBatis SqlSession @Transactional 동작 확인 테스트
+
+### 1. SqlSession 상태 확인 - @Transactional 있음
+GET http://localhost:8080/api/transaction-test/check-sqlsession-with-transaction
+Accept: application/json
+
+###
+
+### 2. SqlSession 상태 확인 - @Transactional 없음
+GET http://localhost:8080/api/transaction-test/check-sqlsession-without-transaction
+Accept: application/json
+
+###
+
+### 3. 기본 동작 비교 - @Transactional 있음
+GET http://localhost:8080/api/transaction-test/with-transaction
+Accept: application/json
+
+###
+
+### 4. 기본 동작 비교 - @Transactional 없음
+GET http://localhost:8080/api/transaction-test/without-transaction
+Accept: application/json
+
+###
+
+### 5. 수동 SqlSession 관리 테스트 (autoCommit 설정 비교)
+GET http://localhost:8080/api/transaction-test/manual-sqlsession
+Accept: application/json
+
+###
+
+### 6. 캐시 동작 확인 - @Transactional 있음
+GET http://localhost:8080/api/transaction-test/cache-with-transaction
+Accept: application/json
+
+###
+
+### 7. 캐시 동작 확인 - @Transactional 없음
+GET http://localhost:8080/api/transaction-test/cache-without-transaction
+Accept: application/json
+
+###
+
+### 8. 복합 작업 - @Transactional 있음
+GET http://localhost:8080/api/transaction-test/multiple-with-transaction
+Accept: application/json
+
+###
+
+### 9. 복합 작업 - @Transactional 없음
+GET http://localhost:8080/api/transaction-test/multiple-without-transaction
+Accept: application/json
+
+###
+
+### 10. 예외 상황 테스트 - @Transactional 있음 (롤백 확인)
+GET http://localhost:8080/api/transaction-test/exception-with-transaction
+Accept: application/json
+
+###
+
+### 11. 예외 상황 테스트 - @Transactional 없음 (커밋 확인)
+GET http://localhost:8080/api/transaction-test/exception-without-transaction
+Accept: application/json
+
+###
