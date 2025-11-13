@@ -1,9 +1,9 @@
 server:
   tomcat:
     threads:
-      max: 50
+      max: 100
       min-spare: 10
-    accept-count: 100
+    #accept-count: 300
 
 spring:
   application:
